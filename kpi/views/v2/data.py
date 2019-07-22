@@ -3,18 +3,19 @@ from __future__ import unicode_literals, absolute_import
 
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
-from rest_framework import renderers, viewsets
+from rest_framework import renderers, serializers, viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
+from kpi.constants import INSTANCE_FORMAT_TYPE_JSON
 from kpi.models import Asset
 from kpi.permissions import (
     EditSubmissionPermission,
     SubmissionPermission,
     SubmissionValidationStatusPermission,
 )
-from kpi.renderers import SubmissionXMLRenderer
+from kpi.renderers import SubmissionGeoJsonRenderer, SubmissionXMLRenderer
 from kpi.utils.viewset_mixins import AssetNestedObjectViewsetMixin
 
 
@@ -154,6 +155,7 @@ class DataViewSet(AssetNestedObjectViewsetMixin, NestedViewSetMixin,
     parent_model = Asset
     renderer_classes = (renderers.BrowsableAPIRenderer,
                         renderers.JSONRenderer,
+                        SubmissionGeoJsonRenderer,
                         SubmissionXMLRenderer
                         )
     permission_classes = (SubmissionPermission,)
@@ -186,6 +188,13 @@ class DataViewSet(AssetNestedObjectViewsetMixin, NestedViewSetMixin,
         format_type = kwargs.get('format', request.GET.get('format', 'json'))
         deployment = self._get_deployment()
         filters = self._filter_mongo_query(request)
+        if format_type == 'geojson':
+            # For GeoJSON, get the submissions as JSON and let
+            # `SubmissionGeoJsonRenderer` handle the rest
+            return Response(
+                deployment.get_submissions(
+                    format_type=INSTANCE_FORMAT_TYPE_JSON, **filters)
+            )
         submissions = deployment.get_submissions(format_type=format_type, **filters)
         return Response(list(submissions))
 
