@@ -55,6 +55,7 @@ oauthlib
 py-gfm
 pymongo
 python-dateutil
+python-dotenv
 pytz
 pyxform
 requests

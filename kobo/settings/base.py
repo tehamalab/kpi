@@ -23,6 +23,11 @@ settings_dirname = os.path.dirname(os.path.abspath(__file__))
 parent_dirname = os.path.dirname(settings_dirname)
 BASE_DIR = os.path.abspath(os.path.dirname(parent_dirname))
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(BASE_DIR, ".env"))
+except ImportError:
+    pass
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -200,7 +205,7 @@ SKIP_HEAVY_MIGRATIONS = os.environ.get('SKIP_HEAVY_MIGRATIONS', 'False') == 'Tru
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 DATABASES = {
     'default': dj_database_url.config(default="sqlite:///%s/db.sqlite3" % BASE_DIR),
-    'kobocat': dj_database_url.config(default="sqlite:///%s/db.sqlite3" % BASE_DIR),
+    'kobocat': dj_database_url.config('KOBOCAT_DATABASE_URL', default="sqlite:///%s/db.sqlite3" % BASE_DIR),
 }
 
 DATABASE_ROUTERS = ["kpi.db_routers.DefaultDatabaseRouter"]
