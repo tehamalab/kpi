@@ -17,7 +17,7 @@
     {% if config.logo %}
         <img src="{{ config.logo }}"/>
     {% else %}
-        <img src="{% static 'img/kobologo.svg' %}"/>
+        <img src="{% static 'img/datacollector.svg' %}"/>
     {% endif %}
 {% endblock %}
 
@@ -25,6 +25,7 @@
 {% endblock %}
 
 {% block background_credit %}
+    {% comment %}
     {% if not config.login_background %}
     {# Show the background image credit only if we're using the default image #}
     <div class="registration__credit">
@@ -37,4 +38,5 @@
         </a>
     </div>
     {% endif %}
+    {% endcomment %}
 {% endblock %}
