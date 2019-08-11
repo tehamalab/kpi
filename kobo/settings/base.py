@@ -223,7 +223,7 @@ LANGUAGES = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = os.environ.get('TIME_ZONE', 'UTC')
 
 LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'),)
 
@@ -251,10 +251,10 @@ MARKDOWNX_MARKDOWN_EXTENSIONS = ['mdx_gfm']
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/' + os.environ.get('KPI_MEDIA_URL', 'media').strip('/') + '/'
+STATIC_ROOT = os.environ.get('KPI_STATIC_ROOT', os.path.join(BASE_DIR, 'staticfiles'))
+STATIC_URL = os.environ.get('KPI_STATIC_URL', '/media/')
+MEDIA_ROOT = os.environ.get('KPI_MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
+MEDIA_URL = os.environ.get('KPI_MEDIA_URL', '/media/')
 
 # Following the uWSGI mountpoint convention, this should have a leading slash
 # but no trailing slash
@@ -399,7 +399,7 @@ ENKETO_SURVEY_ENDPOINT = 'api/v2/survey/all'
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#new-lowercase-settings
 # http://docs.celeryproject.org/en/4.0/whatsnew-4.0.html#step-2-update-your-configuration-with-the-new-setting-names
 
-CELERY_TIMEZONE = "UTC"
+CELERY_TIMEZONE = os.environ.get('CELERY_TIMEZONE', TIME_ZONE)
 
 if os.environ.get('SKIP_CELERY', 'False') == 'True':
     # helpful for certain debugging
@@ -687,7 +687,8 @@ MONGO_DATABASE = {
     'PORT': int(os.environ.get('KPI_MONGO_PORT', 27017)),
     'NAME': os.environ.get('KPI_MONGO_NAME', 'formhub'),
     'USER': os.environ.get('KPI_MONGO_USER', ''),
-    'PASSWORD': os.environ.get('KPI_MONGO_PASS', '')
+    'PASSWORD': os.environ.get('KPI_MONGO_PASS', ''),
+    'SSL': os.environ.get('KPI_MONGO_SSL', '').lower() == 'true'
 }
 
 if MONGO_DATABASE.get('USER') and MONGO_DATABASE.get('PASSWORD'):
@@ -697,5 +698,5 @@ else:
     MONGO_CONNECTION_URL = "mongodb://%(HOST)s:%(PORT)s" % MONGO_DATABASE
 
 MONGO_CONNECTION = MongoClient(
-    MONGO_CONNECTION_URL, j=True, tz_aware=True, connect=False)
+    MONGO_CONNECTION_URL, j=True, tz_aware=True, connect=False, ssl=MONGO_DATABASE['SSL'])
 MONGO_DB = MONGO_CONNECTION[MONGO_DATABASE['NAME']]
