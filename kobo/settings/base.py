@@ -252,7 +252,7 @@ MARKDOWNX_MARKDOWN_EXTENSIONS = ['mdx_gfm']
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_ROOT = os.environ.get('KPI_STATIC_ROOT', os.path.join(BASE_DIR, 'staticfiles'))
-STATIC_URL = os.environ.get('KPI_STATIC_URL', '/media/')
+STATIC_URL = os.environ.get('KPI_STATIC_URL', '/static/')
 MEDIA_ROOT = os.environ.get('KPI_MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
 MEDIA_URL = os.environ.get('KPI_MEDIA_URL', '/media/')
 
