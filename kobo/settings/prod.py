@@ -18,6 +18,8 @@ DATABASES = {
     'kobocat': dj_database_url.config('KOBOCAT_DATABASE_URL', default="sqlite:///%s/db.sqlite3" % BASE_DIR),
 }
 
+TEMPLATES[0]['DIRS'] = os.environ.get('KPI_TEMPLATES_DIRS', os.path.join(BASE_DIR, 'templates')).split()
+
 TIME_ZONE = os.environ.get('TIME_ZONE', 'UTC')
 
 STATIC_ROOT = os.environ.get('KPI_STATIC_ROOT', os.path.join(BASE_DIR, 'staticfiles'))
@@ -25,7 +27,7 @@ STATIC_URL = os.environ.get('KPI_STATIC_URL', '/static/')
 MEDIA_ROOT = os.environ.get('KPI_MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
 MEDIA_URL = os.environ.get('KPI_MEDIA_URL', '/media/')
 
-CELERY_TIMEZONE = os.environ.get('CELERY_TIMEZONE', TIME_ZONE)
+CELERY_TIMEZONE = os.environ.get('KPI_CELERY_TIMEZONE', TIME_ZONE)
 
 MONGO_DATABASE['SSL'] = os.environ.get('KPI_MONGO_SSL', '').lower() == 'true'
 

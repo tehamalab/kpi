@@ -1,0 +1,13 @@
+{% load i18n %}
+{% trans "Thanks for signing up with Tehamalab Data Collector!" %}
+
+{% trans "Confirming your account will give you access to your Tehamalab Data Collector account. Please visit the following url to finish activation of your new account." %}
+
+{{ user }}
+
+{{ kpi_protocol }}://{{ site.domain }}/accounts/activate/{{activation_key}}/
+
+{% trans "If you have any questions or comments feel free to contact us. For more information about Tehamalab please visit https://tehamalab.com." %}
+
+{% trans "Best," %}
+KoBoToolbox

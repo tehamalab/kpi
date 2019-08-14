@@ -1,0 +1,2 @@
+{% load i18n %}
+{% trans "Activate your Tehamalab Data Collector Account" %}
